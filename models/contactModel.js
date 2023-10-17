@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = mongoose.Schema({
+const contactSchema = mongoose.Schema({
     name:{
         type: String,
         required: [true,"Please add user field"]
@@ -19,4 +19,4 @@ const userSchema = mongoose.Schema({
 }
 )
 
-module.exports = mongoose.model('User',userSchema)
+module.exports = mongoose.model('Contact',contactSchema)

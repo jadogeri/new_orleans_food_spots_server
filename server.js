@@ -10,14 +10,16 @@ connectDB();
 const app = express();
 
 //old implementation of routes
-// app.get('/api/users', function(req, res){
-//     res.status(200).json({message:'get all users'});
+// app.get('/api/contacts', function(req, res){
+//     res.status(200).json({message:'get all contacts'});
 // })
 
 app.use(express.json())
 
-app.use('/api/users', require('./routes/userRoutes'))
+app.use('/api/contacts', require('./routes/contactRoutes'));
 app.use(errorHandler)
+app.use('/api/users', require('./routes/userRoutes'));
+
 
 const port = process.env.PORT ;
 
