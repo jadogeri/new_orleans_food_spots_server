@@ -15,16 +15,16 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error('All fields are mandatory');
         
     }
-    const unavailableUserEmail = await User.findOne({email});
+    const unavailableUserEmail = await User.findOne(email);
     if(unavailableUserEmail){
         res.status(400) //.json({message:"all fields must be filled"})
-        throw new Error(`Email ${unavailableUserEmail} already taken`);
+        throw new Error(`Email  already taken`);
     }
 
-    const unavailableUserUsername = await User.findOne({username});
+    const unavailableUserUsername = await User.findOne(username);
     if(unavailableUserUsername){
         res.status(400) //.json({message:"all fields must be filled"})
-        throw new Error(`Username ${unavailableUserUsername} already taken`);
+        throw new Error(`Username  already taken`);
     }
 
     //hash the password 
