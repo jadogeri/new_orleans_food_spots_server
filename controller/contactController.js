@@ -3,11 +3,11 @@ const Contact = require('../models/ContactModel')
 /**
  * @description Get Contacts
  * @route GET /api/Contacts/
- * @access public
+ * @access private
  */
 
 const getContacts = asyncHandler(async function(req, res){
-    const contacts = await Contact.find();
+    const contacts = await Contact.find({user_id:req.user.id});
     //res.status(200).json({message:'get all Contacts'})
    res.status(200).json(contacts)
 });
@@ -15,7 +15,7 @@ const getContacts = asyncHandler(async function(req, res){
 /**
  * @description Get Specific Contact
  * @route GET /api/Contacts/:id
- * @access public
+ * @access private
  */
 
 const getContact = asyncHandler(async function(req, res){
@@ -33,7 +33,7 @@ const getContact = asyncHandler(async function(req, res){
 /**
  * @description Update Specific Contact
  * @route PUT /api/Contacts/:id
- * @access public
+ * @access private
  */
 
 const updateContact = asyncHandler(async function(req, res){
@@ -44,6 +44,11 @@ const updateContact = asyncHandler(async function(req, res){
     if(!contact){
         res.status(404);
         throw new Error(`Contact not found`);
+    }
+
+    if(contact.user_id.toString() !== req.user.id){
+        res.status(403);
+        throw new Error("User donest' have permission to  update other user contact")
     }
 
     const updatedContact = await Contact.findByIdAndUpdate(
@@ -60,7 +65,7 @@ const updateContact = asyncHandler(async function(req, res){
 /**
  * @description Delete Specific Contact
  * @route DELETE /api/Contacts/:id
- * @access public
+ * @access private
  */
 
 const deleteContact = asyncHandler(async function(req, res){
@@ -72,6 +77,12 @@ const deleteContact = asyncHandler(async function(req, res){
         res.status(404);
         throw new Error(`Contact not found`);
     }
+
+    if(contact.user_id.toString() !== req.user.id){
+        res.status(403);
+        throw new Error("User donest' have permission to  update other user contact")
+    }
+
     console.log(typeof req.params.id)
     await Contact.deleteOne({_id : req.params.id});
     res.status(200).json(contact);
@@ -80,7 +91,7 @@ const deleteContact = asyncHandler(async function(req, res){
 /**
  * @description Post Specific Contact
  * @route   POST /api/Contacts/:id
- * @access public
+ * @access private
  */
 
 const createContact = asyncHandler(async function(req, res){
@@ -91,7 +102,12 @@ const createContact = asyncHandler(async function(req, res){
         throw new Error('All fields must be filled');
         
     }
-    const contact = await Contact.create({name,email,age})
+    const contact = await Contact.create({
+        name,
+        email,
+        age,
+        user_id:req.user.id
+    })
     //res.status(201).json({message:"create Contact"})
     res.status(201).json(contact)
 
