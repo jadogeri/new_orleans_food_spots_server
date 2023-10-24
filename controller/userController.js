@@ -49,7 +49,7 @@ res.json({ message: 'Register the user'})
 
 const loginUser = asyncHandler(async (req, res) => {
 
-    const {email, password} = req.body
+    const {email, password,username} = req.body
     if(!password && (!username || !email)){
         res.status(404);
         throw new Error('All fields are mandatory')
